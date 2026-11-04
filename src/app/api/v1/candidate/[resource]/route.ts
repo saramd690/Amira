@@ -1,0 +1,7 @@
+import {NextResponse} from "next/server";
+import {createClient} from "@/lib/supabase/server";
+import {isCandidateResource,resourceTables} from "@/lib/candidate";import {validateCandidateResourceInput} from "@/lib/candidate-validation";
+type C={params:Promise<{resource:string}>};
+async function ctx(c:C){const {resource}=await c.params;if(!isCandidateResource(resource))return {response:NextResponse.json({error:"Unknown resource"},{status:404})};const db=await createClient();const {data:{user},error}=await db.auth.getUser();if(error||!user)return {response:NextResponse.json({error:"Unauthorized"},{status:401})};return {db,user,resource,table:resourceTables[resource]};}
+export async function GET(_q:Request,c:C){const r=await ctx(c);if("response"in r)return r.response;const {data,error}=await r.db.from(r.table).select("*").eq("user_id",r.user.id).order("created_at",{ascending:false});if(error)return NextResponse.json({error:error.message},{status:400});return NextResponse.json({items:data});}
+export async function POST(q:Request,c:C){const r=await ctx(c);if("response"in r)return r.response;let body;try{body=await q.json()}catch{return NextResponse.json({error:"Invalid JSON"},{status:400})}const v=validateCandidateResourceInput(r.resource,body);if(v.error)return NextResponse.json({error:v.error},{status:422});const values=v.values??{};const {data,error}=await r.db.from(r.table).insert({...values,user_id:r.user.id}).select().single();if(error)return NextResponse.json({error:error.message},{status:400});return NextResponse.json({item:data},{status:201});}
