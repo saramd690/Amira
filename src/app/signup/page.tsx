@@ -1,0 +1,1 @@
+import Link from "next/link";import {SignupForm} from "@/components/signup-form";export default function Signup(){return <main className="main" style={{maxWidth:480,paddingTop:80}}><div className="card"><h1>Create candidate account</h1><p className="muted">Register to start building your profile.</p><SignupForm/><p><Link href="/login">Back to sign in</Link></p></div></main>}

@@ -1,0 +1,5 @@
+export const resourceTables={education:"educations",experience:"experiences",languages:"languages",certificates:"certificates",projects:"projects"} as const;export type CandidateResource=keyof typeof resourceTables;export function isCandidateResource(v:string):v is CandidateResource{return Object.prototype.hasOwnProperty.call(resourceTables,v)}
+export const mockVerifiedSkills=["Communication","Problem Solving","Teamwork"];
+export const mockApplications=[{id:"A-1042",role:"Frontend Developer",company:"Northstar Labs",status:"Under review"},{id:"A-1038",role:"Product Designer",company:"BrightPath",status:"Interview"}];
+export const mockRecommendations=[{id:"R-1",role:"React Developer",company:"Orbit Systems",match:92},{id:"R-2",role:"UI Engineer",company:"PixelWorks",match:87}];
+export const mockUpcomingInterviews=[{id:"I-1",role:"Frontend Developer",company:"Northstar Labs",date:"2026-11-12T10:00:00Z"}];
